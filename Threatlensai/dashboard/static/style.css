@@ -1,0 +1,377 @@
+:root {
+    --bg-1: #040b15;
+    --bg-2: #0d1729;
+    --bg-3: #111f36;
+    --panel: rgba(12, 20, 35, 0.73);
+    --panel-strong: rgba(6, 13, 22, 0.9);
+    --line: rgba(148, 163, 184, 0.22);
+    --text: #ebf2ff;
+    --muted: #a3b8d9;
+    --cyan: #57d5ff;
+    --blue: #5fa8ff;
+    --green: #43e0b2;
+    --red: #ff6b7d;
+    --shadow: 0 30px 60px rgba(2, 6, 23, 0.8);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text);
+    background:
+        radial-gradient(circle at 15% 20%, rgba(87, 213, 255, 0.16), transparent 18%),
+        radial-gradient(circle at 85% 10%, rgba(95, 168, 255, 0.18), transparent 20%),
+        linear-gradient(135deg, var(--bg-1), var(--bg-2) 40%, var(--bg-3));
+    display: flex;
+    justify-content: center;
+    padding: 32px 20px;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 36px 36px;
+    pointer-events: none;
+}
+
+.dashboard-shell {
+    position: relative;
+    width: min(1200px, 100%);
+    z-index: 1;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 18px;
+    padding: 18px 22px;
+    background: rgba(15, 23, 42, 0.65);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 22px;
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
+.topbar-controls {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 999px;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    background: rgba(15, 23, 42, 0.55);
+    color: var(--text);
+    font-size: 0.8rem;
+    font-weight: 600;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+.status-pill.online {
+    color: #baf7d0;
+}
+
+.status-pill.warning {
+    color: #ffe7a8;
+}
+
+.mini-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 12px currentColor;
+}
+
+.brand-mark {
+    display: grid;
+    place-items: center;
+    width: 54px;
+    height: 54px;
+    border-radius: 18px;
+    background: linear-gradient(135deg, var(--cyan), var(--blue));
+    color: #06121f;
+    font-weight: 800;
+    box-shadow: 0 12px 30px rgba(87, 213, 255, 0.45);
+}
+
+.eyebrow {
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.68rem;
+    color: var(--muted);
+}
+
+h1 {
+    margin: 4px 0 0;
+    color: #f6fbff;
+    font-size: clamp(2.1rem, 3vw, 3.2rem);
+    line-height: 1.1;
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.metric-strip {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 12px;
+}
+
+.metric-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px 18px;
+    border-radius: 18px;
+    background: rgba(15, 23, 42, 0.7);
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    box-shadow: 0 18px 40px rgba(2, 6, 23, 0.5);
+    overflow: hidden;
+    animation: pulseGlow 2.8s ease-in-out infinite alternate;
+}
+
+.metric-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent 35%, rgba(255,255,255,0.03));
+    pointer-events: none;
+}
+
+.metric-card.danger { border-color: rgba(255, 107, 125, 0.35); }
+.metric-card.warning { border-color: rgba(87, 213, 255, 0.35); }
+.metric-card.success { border-color: rgba(67, 224, 178, 0.35); }
+
+.metric-label,
+.metric-card small {
+    position: relative;
+    z-index: 1;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+}
+
+.metric-value {
+    position: relative;
+    z-index: 1;
+    font-size: clamp(1.3rem, 2vw, 2rem);
+    line-height: 1.2;
+}
+
+.metric-card.danger .metric-value { color: #ff9cad; }
+.metric-card.warning .metric-value { color: #8ed9ff; }
+.metric-card.success .metric-value { color: #8ef4ce; }
+
+@keyframes pulseGlow {
+    from {
+        box-shadow: 0 18px 40px rgba(2, 6, 23, 0.46);
+    }
+    to {
+        box-shadow: 0 18px 44px rgba(87, 213, 255, 0.18);
+    }
+}
+
+.panel {
+    position: relative;
+    background: linear-gradient(180deg, rgba(18, 30, 50, 0.9), rgba(9, 16, 28, 0.72));
+    border: 1px solid rgba(157, 169, 197, 0.18);
+    border-radius: 26px;
+    padding: 22px 20px 18px;
+    box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,0.08);
+    transform: perspective(1100px) rotateX(0deg) rotateY(0deg);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    overflow: hidden;
+}
+
+.panel::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, rgba(255,255,255,0.12), transparent 30%, transparent 70%, rgba(87,213,255,0.08));
+    pointer-events: none;
+}
+
+.panel:hover {
+    transform: perspective(1100px) translateY(-4px) rotateX(1deg) rotateY(-1deg);
+    box-shadow: 0 32px 80px rgba(4, 10, 20, 0.88), inset 0 1px 0 rgba(255,255,255,0.1);
+    border-color: rgba(87, 213, 255, 0.35);
+}
+
+.chart-panel {
+    grid-column: 1 / -1;
+}
+
+.panel-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    z-index: 1;
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    box-shadow: 0 0 18px currentColor;
+}
+
+.status-dot.phishing { color: var(--red); background: var(--red); }
+.status-dot.malware { color: var(--green); background: var(--green); }
+.status-dot.heatmap { color: var(--cyan); background: var(--cyan); }
+
+h2 {
+    margin: 0;
+    color: #f8fbff;
+    font-size: clamp(1.2rem, 2vw, 1.7rem);
+}
+
+.scanner-form {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.scanner-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: var(--muted);
+    font-weight: 600;
+}
+
+input[type="text"],
+textarea,
+input[type="file"] {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    background: rgba(2, 6, 23, 0.8);
+    color: var(--text);
+    font: inherit;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+input:focus,
+textarea:focus {
+    border-color: rgba(87, 213, 255, 0.9);
+    box-shadow: 0 0 0 3px rgba(87, 213, 255, 0.18);
+    outline: none;
+}
+
+button {
+    align-self: flex-start;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 24px;
+    font: inherit;
+    font-weight: 700;
+    color: #031421;
+    background: linear-gradient(135deg, var(--cyan), var(--green));
+    box-shadow: 0 10px 24px rgba(67, 224, 178, 0.28);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 18px 40px rgba(87, 213, 255, 0.28);
+    filter: brightness(1.05);
+}
+
+.chart-wrap {
+    position: relative;
+    z-index: 1;
+    height: 320px;
+    border-radius: 18px;
+    background: rgba(2, 6, 23, 0.6);
+    border: 1px solid var(--line);
+    padding: 12px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+#heatmap {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+}
+
+@media (max-width: 760px) {
+    body {
+        padding: 20px 14px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .metric-strip {
+        grid-template-columns: 1fr;
+    }
+
+    .brand {
+        width: 100%;
+    }
+
+    button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .panel {
+        padding: 18px 14px;
+    }
+
+    .chart-wrap {
+        height: 240px;
+    }
+}

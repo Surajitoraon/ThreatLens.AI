@@ -1,0 +1,141 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ThreatLensAI Dashboard</title>
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <div class="dashboard-shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark">TL</div>
+        <div>
+          <p class="eyebrow">Threat Intelligence</p>
+          <h1>ThreatLensAI</h1>
+        </div>
+      </div>
+
+      <div class="topbar-controls">
+        <div class="status-pill online">
+          <span class="mini-dot"></span>
+          System Online
+        </div>
+        <div class="status-pill warning">
+          <span class="mini-dot"></span>
+          3 Alerts
+        </div>
+      </div>
+    </header>
+
+    <main class="dashboard-grid">
+      <section class="metric-strip">
+        <div class="metric-card danger">
+          <span class="metric-label">Phishing Risk</span>
+          <strong class="metric-value">LIVE</strong>
+          <small>Active watchlist</small>
+        </div>
+        <div class="metric-card warning">
+          <span class="metric-label">Malware Feed</span>
+          <strong class="metric-value">SYNC</strong>
+          <small>Threat payloads</small>
+        </div>
+        <div class="metric-card success">
+          <span class="metric-label">Response Time</span>
+          <strong class="metric-value">0.8s</strong>
+          <small>Avg. scan speed</small>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <span class="status-dot phishing"></span>
+          <h2>Phishing Scanner</h2>
+        </div>
+        <form method="post" action="/phishing_scan/" class="scanner-form">
+          {% csrf_token %}
+          <label>
+            <span>Subject</span>
+            <input type="text" name="subject" placeholder="Enter email subject">
+          </label>
+          <label>
+            <span>Email body</span>
+            <textarea name="body" placeholder="Paste suspicious email content"></textarea>
+          </label>
+          <button type="submit">Scan Threat</button>
+        </form>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <span class="status-dot malware"></span>
+          <h2>Malware Scanner</h2>
+        </div>
+        <form method="post" action="/malware_scan/" enctype="multipart/form-data" class="scanner-form">
+          {% csrf_token %}
+          <label>
+            <span>Upload sample</span>
+            <input type="file" name="file">
+          </label>
+          <button type="submit">Analyze File</button>
+        </form>
+      </section>
+
+      <section class="panel chart-panel">
+        <div class="panel-header">
+          <span class="status-dot heatmap"></span>
+          <h2>Threat Heatmap</h2>
+        </div>
+        <div class="chart-wrap">
+          <canvas id="heatmap"></canvas>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    async function loadStats() {
+      const res = await fetch("/stats/");
+      const data = await res.json();
+      new Chart(document.getElementById("heatmap"), {
+        type: "bar",
+        data: {
+          labels: ["Phishing", "Malware"],
+          datasets: [{
+            label: "Threat Counts",
+            data: [data.phishing, data.malware],
+            backgroundColor: ["rgba(255,99,132,0.8)", "rgba(54,162,235,0.8)"],
+            borderRadius: 10,
+            borderSkipped: false
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: {
+                color: '#dfe8ff'
+              }
+            }
+          },
+          scales: {
+            x: {
+              ticks: { color: '#dfe8ff' },
+              grid: { color: 'rgba(255,255,255,0.06)' }
+            },
+            y: {
+              ticks: { color: '#dfe8ff' },
+              grid: { color: 'rgba(255,255,255,0.06)' }
+            }
+          }
+        }
+      });
+    }
+    loadStats();
+  </script>
+</body>
+</html>

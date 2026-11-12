@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: threatlensai
+    runtime: python
+    plan: free
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --noinput"
+    startCommand: "gunicorn Threatlensai.wsgi:application"
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: "False"
+      - key: ALLOWED_HOSTS
+        value: "localhost,127.0.0.1,threatlensai.onrender.com"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: threatlensai-db
+          property: connectionString
+      - key: CSRF_TRUSTED_ORIGINS
+        value: "https://threatlensai.onrender.com"
+
+databases:
+  - name: threatlensai-db
+    databaseName: threatlensai
+    user: threatlensai
+    plan: free
