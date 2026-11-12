@@ -1,7 +1,5 @@
 # ThreatLens.AI
 
-# ThreatLensAI
-
 ThreatLensAI is a Django-based security dashboard for simulating phishing and malware risk signals. It presents a cyber-style monitoring interface for evaluating suspicious email content and tracking attack-related events.
 
 ## Features
